@@ -1,0 +1,21 @@
+title: SSH Login Accepted
+id: 50fca299-213d-5bba-b044-a0b625556a86
+status: experimental
+description: 'Successful SSH login. Pair with the brute-force correlation to find a success from an attacking IP.'
+author: Steven Drew
+date: 2026-03-01
+tags:
+    - attack.lateral-movement
+    - attack.t1021.004
+logsource:
+    product: linux
+    service: auth
+detection:
+    selection:
+        - 'Accepted password for '
+        - 'Accepted publickey for '
+        - 'Accepted keyboard-interactive/pam for '
+    condition: selection
+falsepositives:
+    - Normal administrative logins
+level: informational

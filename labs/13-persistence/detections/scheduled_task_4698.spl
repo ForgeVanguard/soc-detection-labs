@@ -1,0 +1,5 @@
+``` Lab 13 - new scheduled task (4698) outside \\Microsoft\\, with the action pulled out of the task XML. ```
+index=wineventlog source="XmlWinEventLog:Security" EventCode=4698 NOT Task_Name="\\Microsoft\\*"
+| rex field=Task_Content "<Command>(?<task_command>[^<]+)</Command>"
+| rex field=Task_Content "<Arguments>(?<task_args>[^<]+)</Arguments>"
+| table _time host Account_Name Task_Name task_command task_args

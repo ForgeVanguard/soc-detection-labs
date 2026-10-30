@@ -1,0 +1,7 @@
+``` Lab 01 - SSH brute force: >=5 failures per source IP per minute. Splunk Add-on for Unix and Linux, sourcetype linux_secure. ```
+index=linux sourcetype=linux_secure ("Failed password" OR "Failed publickey" OR "Failed keyboard-interactive")
+| rex "Failed \S+ for (invalid user )?(?<user>\S+) from (?<src_ip>\S+) port"
+| bin _time span=1m
+| stats count as failures dc(user) as distinct_users values(user) as users by _time host src_ip
+| where failures >= 5
+| sort - failures

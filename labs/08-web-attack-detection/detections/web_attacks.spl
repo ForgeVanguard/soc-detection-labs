@@ -1,0 +1,10 @@
+``` Lab 08 - classify DVWA attack traffic in Apache access logs (sourcetype access_combined). urldecode first so encoded payloads match. ```
+index=web sourcetype=access_combined uri_path="/dvwa/vulnerabilities/*"
+| eval q=lower(urldecode(coalesce(uri_query, uri)))
+| eval attack=case(
+    match(q, "union\s+(all\s+)?select|'\s*or\s*'?1'?\s*=\s*'?1|information_schema|sleep\(|@@version|'\s*--"), "sqli",
+    match(q, "<script|javascript:|onerror\s*=|onload\s*=|alert\(|document\.cookie"), "xss",
+    match(q, "(;|\||&&|`|\$\()\s*(id|whoami|uname|cat\s+/etc/passwd|ls)\b"), "cmd_injection")
+| where isnotnull(attack)
+| stats count min(_time) as first_seen max(_time) as last_seen values(uri_path) as paths values(status) as statuses by clientip attack
+| convert ctime(first_seen) ctime(last_seen)

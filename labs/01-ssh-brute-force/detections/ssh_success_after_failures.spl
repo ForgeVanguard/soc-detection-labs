@@ -1,0 +1,7 @@
+``` Lab 01 - a successful SSH login from a source IP that failed >=5 times in the previous 30 minutes. Highest-priority SSH alert. ```
+index=linux sourcetype=linux_secure ("Failed password" OR "Accepted password" OR "Accepted publickey" OR "Failed publickey")
+| rex "(?<outcome>Failed|Accepted) \S+ for (invalid user )?(?<user>\S+) from (?<src_ip>\S+) port"
+| sort 0 _time
+| streamstats time_window=30m count(eval(outcome="Failed")) as recent_failures by src_ip
+| where outcome="Accepted" AND recent_failures >= 5
+| table _time host src_ip user recent_failures

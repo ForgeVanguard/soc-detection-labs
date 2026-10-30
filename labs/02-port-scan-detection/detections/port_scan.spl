@@ -1,0 +1,6 @@
+``` Lab 02 - one source touching >=20 distinct ports on one host within 5 min. Uses the CIM Network_Traffic data model (pfSense/OPNsense, iptables, Zeek conn). ```
+| tstats summariesonly=false dc(All_Traffic.dest_port) as distinct_ports count as attempts values(All_Traffic.action) as actions
+    from datamodel=Network_Traffic by _time span=5m All_Traffic.src All_Traffic.dest
+| rename All_Traffic.* as *
+| where distinct_ports >= 20
+| sort - distinct_ports

@@ -1,0 +1,9 @@
+``` Lab 10 - VERSION 2 (tuned): allowlist lookup for scanners/bastions, wider window and threshold, and severity by outcome. Each change is recorded in tuning-log.md. ```
+index=linux sourcetype=linux_secure ("Failed password" OR "Failed keyboard-interactive" OR "Accepted password" OR "Accepted publickey")
+| rex "(?<outcome>Failed|Accepted) \S+ for (invalid user )?(?<user>\S+) from (?<src_ip>\S+) port"
+| lookup ssh_allowlist.csv src_ip OUTPUT reason as allow_reason
+| where isnull(allow_reason)
+| bin _time span=5m
+| stats count(eval(outcome="Failed")) as failures count(eval(outcome="Accepted")) as successes dc(user) as distinct_users by _time host src_ip
+| where failures >= 10
+| eval severity=case(successes > 0, "high", distinct_users >= 5, "medium", true(), "low")

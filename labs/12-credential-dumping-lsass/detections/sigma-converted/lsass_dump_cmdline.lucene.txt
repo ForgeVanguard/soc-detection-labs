@@ -1,0 +1,1 @@
+winlog.channel:Microsoft\-Windows\-Sysmon\/Operational AND (event.code:1 AND ((process.command_line:*comsvcs* AND process.command_line:*MiniDump*) OR (((process.executable.caseless:(*\\procdump.exe OR *\\procdump64.exe)) OR process.pe.original_file_name:procdump) AND (process.command_line:(*\ \-ma\ * OR *\ \/ma\ * OR *\ \-mm\ *)) AND process.command_line:*lsass*)))

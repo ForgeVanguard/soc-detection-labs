@@ -1,0 +1,1 @@
+"cs-uri-query" IN ("*;id*", "*%3Bid*", "*|id*", "*%7Cid*", "*&&whoami*", "*%26%26whoami*", "*;whoami*", "*%3Bwhoami*", "*cat /etc/passwd*", "*cat%20/etc/passwd*", "*cat+/etc/passwd*", "*$(*", "*%24%28*", "*`*")

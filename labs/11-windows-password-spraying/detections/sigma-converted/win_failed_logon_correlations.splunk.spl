@@ -1,0 +1,13 @@
+Channel="Security" EventID=4625 SubStatus IN ("0xc000006a", "0xc0000064")
+
+| bin _time span=10m
+| stats count as event_count by _time TargetUserName
+
+| search event_count >= 20
+
+Channel="Security" EventID=4625 SubStatus IN ("0xc000006a", "0xc0000064")
+
+| bin _time span=10m
+| stats dc(TargetUserName) as value_count by _time IpAddress
+
+| search value_count >= 10

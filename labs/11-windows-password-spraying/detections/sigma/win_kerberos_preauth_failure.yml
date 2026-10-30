@@ -1,0 +1,20 @@
+title: Kerberos Pre-Authentication Failure
+id: 8e2fd77c-390d-5d34-8ef1-5d2fc9d170f0
+status: experimental
+description: 'Event 4771 with failure code 0x18 (bad password). Kerberos-based spraying shows up here, not in 4625.'
+author: Steven Drew
+date: 2026-03-01
+tags:
+    - attack.credential-access
+    - attack.t1110.003
+logsource:
+    product: windows
+    service: security
+detection:
+    selection:
+        EventID: 4771
+        Status: '0x18'
+    condition: selection
+falsepositives:
+    - Users mistyping passwords
+level: low

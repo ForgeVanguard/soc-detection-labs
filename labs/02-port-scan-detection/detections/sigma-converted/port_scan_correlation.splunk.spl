@@ -1,0 +1,6 @@
+action IN ("blocked", "denied", "drop", "reject")
+
+| bin _time span=5m
+| stats dc(dst_port) as value_count by _time src_ip dst_ip
+
+| search value_count >= 20

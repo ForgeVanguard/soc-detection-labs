@@ -1,0 +1,4 @@
+// Lab 04 - Elastic EQL sequence: web server spawns a shell, then that host makes an outbound connection within 10 minutes
+sequence by host.id with maxspan=10m
+  [process where event.type == "start" and process.parent.name in ("apache2", "httpd", "nginx", "php-fpm") and process.name in ("sh", "bash", "dash")]
+  [network where event.type == "start" and network.direction in ("egress", "outgoing") and process.name in ("sh", "bash", "nc", "python3")]

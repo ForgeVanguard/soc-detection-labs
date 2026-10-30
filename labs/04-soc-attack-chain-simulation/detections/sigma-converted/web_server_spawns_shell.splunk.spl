@@ -1,0 +1,1 @@
+ParentImage IN ("*/apache2", "*/httpd", "*/nginx", "*/php-fpm", "*/lighttpd") Image IN ("*/sh", "*/bash", "*/dash", "*/nc", "*/python3", "*/perl")

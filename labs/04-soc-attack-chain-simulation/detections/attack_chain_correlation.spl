@@ -1,0 +1,13 @@
+``` Lab 04 - correlate the kill chain per attacker IP: scan -> web exploit -> shell -> outbound C2. Each stage is a sub-search; the alert fires when >=3 stages share one IP within 2h. ```
+(index=zeek sourcetype=zeek:conn conn_state IN ("S0","REJ")) OR (index=web sourcetype=access_combined) OR (index=linux sourcetype="sysmon:linux" EventID IN (1,3))
+| eval attacker=coalesce('id.orig_h', clientip, DestinationIp)
+| eval stage=case(
+    sourcetype="zeek:conn", "1_recon",
+    sourcetype="access_combined" AND match(uri_query, "(?i)(%3B|;|%7C|\|)(id|whoami|cat)"), "2_exploit",
+    EventID=1 AND match(ParentImage, "/(apache2|httpd|nginx|php-fpm)$") AND match(Image, "/(sh|bash|dash)$"), "3_execution",
+    EventID=3 AND match(Image, "/(sh|bash|nc|python3)$"), "4_c2")
+| where isnotnull(stage) AND isnotnull(attacker)
+| bin _time span=2h
+| stats dc(stage) as stages values(stage) as chain min(_time) as first_seen max(_time) as last_seen by _time attacker
+| where stages >= 3
+| convert ctime(first_seen) ctime(last_seen)

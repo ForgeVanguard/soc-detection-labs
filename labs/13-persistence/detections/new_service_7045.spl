@@ -1,0 +1,4 @@
+``` Lab 13 - new service (System 7045) whose binary path is user-writable or a script interpreter. ```
+index=wineventlog source="XmlWinEventLog:System" EventCode=7045
+| where match(ImagePath, "(?i)\\(appdata|temp|users\\public|programdata)\\|powershell|cmd(\.exe)? /c|mshta|rundll32")
+| table _time host Service_Name ImagePath Service_Type Service_Start_Type Service_Account

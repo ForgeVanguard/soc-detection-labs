@@ -1,0 +1,68 @@
+title: Windows Failed Logon - Bad Password or Unknown User
+id: 774f2c80-a2c6-5987-85b7-659f8781e743
+status: experimental
+description: 'Event 4625 with a bad-password or unknown-user status. Base event for the spray correlation.'
+author: Steven Drew
+date: 2026-03-01
+tags:
+    - attack.credential-access
+    - attack.t1110
+logsource:
+    product: windows
+    service: security
+detection:
+    selection:
+        EventID: 4625
+        SubStatus:
+            - '0xc000006a'
+            - '0xc0000064'
+    condition: selection
+falsepositives:
+    - Users mistyping passwords
+level: informational
+---
+title: Windows Brute Force - Many Failures Against One Account
+id: 845a92a4-0ef7-55e0-bd0c-8c47d19f5f08
+status: experimental
+description: Twenty or more failed logons (4625) for the same account within ten minutes.
+author: Steven Drew
+date: 2026-03-01
+tags:
+    - attack.credential-access
+    - attack.t1110.001
+correlation:
+    type: event_count
+    rules:
+        - 774f2c80-a2c6-5987-85b7-659f8781e743
+    group-by:
+        - TargetUserName
+    timespan: 10m
+    condition:
+        gte: 20
+falsepositives:
+    - Mapped drives or services still using an old password after a reset
+level: medium
+---
+title: Windows Password Spray - Many Accounts From One Source
+id: 48fabfa3-c639-554b-a77b-a8fa26be0063
+status: experimental
+description: One source IP fails logon (4625) for ten or more distinct accounts within ten minutes.
+author: Steven Drew
+date: 2026-03-01
+tags:
+    - attack.credential-access
+    - attack.t1110.003
+correlation:
+    type: value_count
+    rules:
+        - 774f2c80-a2c6-5987-85b7-659f8781e743
+    group-by:
+        - IpAddress
+    timespan: 10m
+    condition:
+        field: TargetUserName
+        gte: 10
+falsepositives:
+    - Shared terminal servers or VDI gateways that front many users
+    - Applications with a stale service-account password on many hosts
+level: high

@@ -1,0 +1,5 @@
+``` Lab 02 - Zeek conn.log variant. S0/REJ/RSTO states = unanswered or refused connections, typical of SYN scans. ```
+index=zeek sourcetype=zeek:conn conn_state IN ("S0","REJ","RSTOS0","RSTR","SH")
+| bin _time span=5m
+| stats dc(id.resp_p) as distinct_ports count as attempts values(conn_state) as states by _time id.orig_h id.resp_h
+| where distinct_ports >= 20

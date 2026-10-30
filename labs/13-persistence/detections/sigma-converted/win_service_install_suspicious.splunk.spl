@@ -1,0 +1,1 @@
+Channel="System" Provider_Name="Service Control Manager" EventID=7045 ImagePath IN ("*\\AppData\\*", "*\\Temp\\*", "*\\Users\\Public\\*", "*\\ProgramData\\*", "*powershell*", "*cmd.exe /c*", "*cmd /c*", "*mshta*", "*rundll32*")

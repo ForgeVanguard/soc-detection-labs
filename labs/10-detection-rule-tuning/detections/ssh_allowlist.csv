@@ -1,0 +1,3 @@
+src_ip,reason,owner,review_by
+192.0.2.5,authorized vulnerability scanner,<USERNAME>,2026-06-30
+192.0.2.6,bastion host,<USERNAME>,2026-06-30

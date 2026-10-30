@@ -1,0 +1,8 @@
+``` Lab 14 - PsExec on the target: network logon (4624 type 3) + ADMIN$/IPC$ share access (5145) + PSEXESVC service install (7045) on the same host within 2 minutes. ```
+(index=wineventlog source="XmlWinEventLog:Security" ((EventCode=4624 Logon_Type=3) OR (EventCode=5145 Share_Name IN ("\\\\*\\ADMIN$","\\\\*\\IPC$"))))
+OR (index=wineventlog source="XmlWinEventLog:System" EventCode=7045 Service_Name=PSEXESVC)
+| eval src=coalesce(Source_Network_Address, Source_Address)
+| eval step=case(EventCode=4624, "network_logon", EventCode=5145, "admin_share", EventCode=7045, "service_install")
+| transaction host maxspan=2m
+| where mvcount(mvdedup(step)) >= 3
+| table _time host src step Account_Name

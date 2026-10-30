@@ -1,0 +1,1 @@
+Channel="Microsoft-Windows-Sysmon/Operational" EventID=13 TargetObject IN ("*\\Software\\Microsoft\\Windows\\CurrentVersion\\Run\\*", "*\\Software\\Microsoft\\Windows\\CurrentVersion\\RunOnce\\*", "*\\Software\\WOW6432Node\\Microsoft\\Windows\\CurrentVersion\\Run\\*")

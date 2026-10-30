@@ -1,0 +1,6 @@
+``` Lab 14 - one account making type 3 logons to many hosts in 15 minutes (fan-out). ```
+index=wineventlog source="XmlWinEventLog:Security" EventCode=4624 Logon_Type=3 NOT Account_Name="*$" NOT Account_Name="ANONYMOUS LOGON"
+| eval account=mvindex(Account_Name, -1)
+| bin _time span=15m
+| stats dc(host) as targets values(host) as hosts by _time account Source_Network_Address
+| where targets >= 3

@@ -1,0 +1,4 @@
+``` Lab 05 - search the JSON alerts written by lbfd --json (monitor alerts.jsonl with sourcetype=_json). ```
+index=ids sourcetype=_json rule=*
+| table first_seen last_seen rule src_ip host count users
+| sort - count

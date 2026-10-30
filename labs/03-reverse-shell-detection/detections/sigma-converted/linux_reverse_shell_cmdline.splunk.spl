@@ -1,0 +1,1 @@
+(Image IN ("*/nc", "*/ncat", "*/netcat", "*/nc.traditional") CommandLine IN ("* -e *", "* -c *", "* --exec *", "* --sh-exec *")) OR CommandLine="*/dev/tcp/*" OR (CommandLine="*mkfifo*" CommandLine="* nc *")

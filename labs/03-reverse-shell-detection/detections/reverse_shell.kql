@@ -1,0 +1,6 @@
+// Lab 03 - Microsoft Defender for Endpoint / Sentinel advanced hunting (Linux devices)
+DeviceProcessEvents
+| where (FileName in~ ("nc", "ncat", "netcat") and ProcessCommandLine matches regex @"\s-(e|c)\s")
+     or ProcessCommandLine has "/dev/tcp/"
+     or (ProcessCommandLine has "mkfifo" and ProcessCommandLine has " nc ")
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName

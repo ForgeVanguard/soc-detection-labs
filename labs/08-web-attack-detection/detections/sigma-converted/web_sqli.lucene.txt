@@ -1,0 +1,1 @@
+cs-uri-query:(*'\ or\ '1'\='1* OR *%27%20or%20%271%27%3D%271* OR *union\ select* OR *union%20select* OR *union\+select* OR *information_schema* OR *sleep\(* OR *@@version* OR *%27\-\-* OR *'\-\-*)

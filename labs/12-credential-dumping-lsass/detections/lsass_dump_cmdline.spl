@@ -1,0 +1,5 @@
+``` Lab 12 - Sysmon 1: command lines that dump LSASS memory (comsvcs.dll MiniDump, ProcDump -ma lsass). ```
+index=wineventlog source="XmlWinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode=1
+| where (match(CommandLine, "(?i)comsvcs") AND match(CommandLine, "(?i)minidump"))
+     OR (match(Image, "(?i)\\procdump(64)?\.exe$") AND match(CommandLine, "(?i)\s[-/]m[am]\s") AND match(CommandLine, "(?i)lsass"))
+| table _time host User ParentImage Image CommandLine

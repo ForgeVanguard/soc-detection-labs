@@ -1,0 +1,5 @@
+``` Lab 11 - Kerberos pre-auth failures (4771, code 0x18) from one client address. ```
+index=wineventlog source="XmlWinEventLog:Security" EventCode=4771 Failure_Code=0x18
+| bin _time span=10m
+| stats count as failures dc(Account_Name) as distinct_accounts by _time Client_Address
+| where distinct_accounts >= 10

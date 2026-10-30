@@ -1,0 +1,11 @@
+// Lab 06 - Microsoft Sentinel. Works on any table with per-connection rows; CommonSecurityLog shown.
+CommonSecurityLog
+| where TimeGenerated > ago(24h)
+| project TimeGenerated, SourceIP, DestinationIP, DestinationPort
+| sort by SourceIP, DestinationIP, DestinationPort, TimeGenerated asc
+| extend Gap = datetime_diff("second", TimeGenerated, prev(TimeGenerated))
+| where SourceIP == prev(SourceIP) and DestinationIP == prev(DestinationIP) and DestinationPort == prev(DestinationPort) and Gap > 0
+| summarize Connections = count(), MeanGap = avg(Gap), SdGap = stdev(Gap) by SourceIP, DestinationIP, DestinationPort
+| extend CV = round(SdGap / MeanGap, 3)
+| where Connections >= 10 and MeanGap >= 5 and CV <= 0.25
+| order by CV asc

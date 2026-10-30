@@ -1,0 +1,11 @@
+``` Lab 06 - interval regularity per src/dest/port from Zeek conn.log. Low coefficient of variation (stdev/mean) of the gaps = timer-driven traffic. ```
+index=zeek sourcetype=zeek:conn
+| sort 0 _time
+| streamstats current=f last(_time) as prev_time by id.orig_h id.resp_h id.resp_p
+| eval gap=_time-prev_time
+| where isnotnull(gap) AND gap > 0
+| stats count as connections avg(gap) as mean_gap stdev(gap) as sd_gap median(gap) as median_gap avg(orig_bytes) as avg_bytes stdev(orig_bytes) as sd_bytes
+    by id.orig_h id.resp_h id.resp_p
+| eval cv=round(sd_gap/mean_gap, 3), bytes_cv=round(sd_bytes/avg_bytes, 3), mean_gap=round(mean_gap, 1)
+| where connections >= 10 AND mean_gap >= 5 AND cv <= 0.25
+| sort cv

@@ -1,0 +1,23 @@
+title: NTLM Credential Validation Failure
+id: 7b3d3ea6-64df-5a7a-ae99-d2cb48515521
+status: experimental
+description: 'Event 4776 on a domain controller with a bad-password or unknown-account error. It catches NTLM spraying that does not produce a 4625 on the DC.'
+author: Steven Drew
+date: 2026-03-01
+tags:
+    - attack.credential-access
+    - attack.t1110.003
+logsource:
+    product: windows
+    service: security
+detection:
+    selection:
+        EventID: 4776
+        Status:
+            - '0xc000006a'
+            - '0xc0000064'
+    condition: selection
+falsepositives:
+    - Users mistyping passwords
+    - Legacy devices with cached credentials
+level: low

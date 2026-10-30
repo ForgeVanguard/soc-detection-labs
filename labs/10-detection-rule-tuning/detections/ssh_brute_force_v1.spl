@@ -1,0 +1,6 @@
+``` Lab 10 - VERSION 1 (untuned): copy of Lab 01. Record its alert count over your baseline window in tuning-log.md. ```
+index=linux sourcetype=linux_secure ("Failed password" OR "Failed keyboard-interactive")
+| rex "Failed \S+ for (invalid user )?(?<user>\S+) from (?<src_ip>\S+) port"
+| bin _time span=1m
+| stats count as failures by _time host src_ip
+| where failures >= 5

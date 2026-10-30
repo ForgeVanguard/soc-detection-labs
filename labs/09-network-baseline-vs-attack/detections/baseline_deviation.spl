@@ -1,0 +1,9 @@
+``` Lab 09 - compare the last 24h with the baseline: new host/port pairs, and volume above 3x the baseline daily average. ```
+index=zeek sourcetype=zeek:conn earliest=-24h
+| stats count as conns sum(orig_bytes) as bytes_out dc(id.resp_h) as peers by id.orig_h id.resp_p proto
+| lookup network_baseline.csv id.orig_h id.resp_p proto OUTPUT avg_daily_conns avg_daily_bytes_out
+| eval finding=case(isnull(avg_daily_conns), "new_port_for_host",
+                    conns > 3*avg_daily_conns, "connection_spike",
+                    bytes_out > 3*avg_daily_bytes_out, "egress_volume_spike")
+| where isnotnull(finding)
+| sort finding - conns

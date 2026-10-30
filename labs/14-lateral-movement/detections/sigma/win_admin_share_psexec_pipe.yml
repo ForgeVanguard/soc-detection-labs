@@ -1,0 +1,28 @@
+title: Admin Share Access With Service Pipe
+id: 0922822a-9e23-59a1-a400-977a0184c9ba
+status: experimental
+description: 'Event 5145: access to ADMIN$ or IPC$ with PsExec-style named pipes or service binary writes.'
+author: Steven Drew
+date: 2026-03-01
+tags:
+    - attack.lateral-movement
+    - attack.t1021.002
+logsource:
+    product: windows
+    service: security
+detection:
+    selection:
+        EventID: 5145
+        ShareName|endswith:
+            - '\ADMIN$'
+            - '\IPC$'
+        RelativeTargetName|contains:
+            - 'PSEXESVC'
+            - '-stdin'
+            - '-stdout'
+            - '-stderr'
+            - 'svcctl'
+    condition: selection
+falsepositives:
+    - Remote management tools (SCCM, backup agents)
+level: medium

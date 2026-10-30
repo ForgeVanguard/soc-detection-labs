@@ -1,0 +1,1 @@
+cs-uri-query:(*\<script* OR *%3Cscript* OR *javascript\:* OR *onerror\=* OR *onerror%3D* OR *onload\=* OR *onload%3D* OR *alert\(* OR *alert%28* OR *document.cookie*)

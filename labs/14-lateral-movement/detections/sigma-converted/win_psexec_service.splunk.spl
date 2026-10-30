@@ -1,0 +1,1 @@
+Channel="System" Provider_Name="Service Control Manager" EventID=7045 ServiceName="PSEXESVC" OR ImagePath="*\\PSEXESVC.exe"

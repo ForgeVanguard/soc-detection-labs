@@ -1,0 +1,82 @@
+<form version="1.1" theme="dark">
+  <label>Lab 01 - SSH Authentication Monitoring</label>
+  <description>SSH failures, brute-force sources and success-after-failure events from linux_secure. Import with Settings &gt; User interface &gt; Views, or paste into a new dashboard's Source view.</description>
+  <fieldset submitButton="false">
+    <input type="time" token="tr">
+      <label>Time range</label>
+      <default>
+        <earliest>-24h@h</earliest>
+        <latest>now</latest>
+      </default>
+    </input>
+    <input type="text" token="threshold">
+      <label>Failures per minute threshold</label>
+      <default>5</default>
+    </input>
+  </fieldset>
+  <row>
+    <panel>
+      <title>Failed vs accepted SSH logins</title>
+      <chart>
+        <search>
+          <query>index=linux sourcetype=linux_secure ("Failed password" OR "Failed publickey" OR "Accepted password" OR "Accepted publickey")
+| rex "(?&lt;outcome&gt;Failed|Accepted) \S+ for"
+| timechart span=5m count by outcome</query>
+          <earliest>$tr.earliest$</earliest>
+          <latest>$tr.latest$</latest>
+        </search>
+        <option name="charting.chart">column</option>
+        <option name="charting.chart.stackMode">stacked</option>
+      </chart>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <title>Brute-force sources (failures per 1-minute bucket at or above threshold)</title>
+      <table>
+        <search>
+          <query>index=linux sourcetype=linux_secure ("Failed password" OR "Failed publickey" OR "Failed keyboard-interactive")
+| rex "Failed \S+ for (invalid user )?(?&lt;user&gt;\S+) from (?&lt;src_ip&gt;\S+) port"
+| bin _time span=1m
+| stats count as failures dc(user) as distinct_users by _time host src_ip
+| where failures &gt;= $threshold$
+| stats max(failures) as peak_per_min sum(failures) as total_failures max(distinct_users) as max_users min(_time) as first_seen max(_time) as last_seen by host src_ip
+| convert ctime(first_seen) ctime(last_seen)
+| sort - total_failures</query>
+          <earliest>$tr.earliest$</earliest>
+          <latest>$tr.latest$</latest>
+        </search>
+      </table>
+    </panel>
+    <panel>
+      <title>Top targeted usernames</title>
+      <chart>
+        <search>
+          <query>index=linux sourcetype=linux_secure "Failed"
+| rex "Failed \S+ for (invalid user )?(?&lt;user&gt;\S+) from"
+| top limit=10 user</query>
+          <earliest>$tr.earliest$</earliest>
+          <latest>$tr.latest$</latest>
+        </search>
+        <option name="charting.chart">bar</option>
+      </chart>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <title>Success after failures (investigate first)</title>
+      <table>
+        <search>
+          <query>index=linux sourcetype=linux_secure ("Failed password" OR "Failed publickey" OR "Accepted password" OR "Accepted publickey")
+| rex "(?&lt;outcome&gt;Failed|Accepted) \S+ for (invalid user )?(?&lt;user&gt;\S+) from (?&lt;src_ip&gt;\S+) port"
+| sort 0 _time
+| streamstats time_window=30m count(eval(outcome="Failed")) as recent_failures by src_ip
+| where outcome="Accepted" AND recent_failures &gt;= $threshold$
+| table _time host src_ip user recent_failures</query>
+          <earliest>$tr.earliest$</earliest>
+          <latest>$tr.latest$</latest>
+        </search>
+      </table>
+    </panel>
+  </row>
+</form>

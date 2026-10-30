@@ -1,0 +1,33 @@
+title: LSASS Process Access With Credential-Read Rights
+id: fc3e119c-9c6b-5d49-92a4-ed4ef5eacc5d
+status: experimental
+description: 'Sysmon event 10: a process opens lsass.exe with access masks used by credential dumpers (memory read plus query information).'
+author: Steven Drew
+date: 2026-03-01
+tags:
+    - attack.credential-access
+    - attack.t1003.001
+logsource:
+    product: windows
+    category: process_access
+detection:
+    selection:
+        TargetImage|endswith: '\lsass.exe'
+        GrantedAccess:
+            - '0x1010'
+            - '0x1410'
+            - '0x1438'
+            - '0x143a'
+            - '0x1fffff'
+    filter_system:
+        SourceImage|startswith:
+            - 'C:\Windows\System32\'
+            - 'C:\Program Files\Windows Defender\'
+            - 'C:\ProgramData\Microsoft\Windows Defender\'
+    filter_wer:
+        SourceImage|endswith: '\WerFault.exe'
+    condition: selection and not 1 of filter_*
+falsepositives:
+    - EDR/AV agents and backup software (filter by signed SourceImage path)
+    - Windows Error Reporting (WerFault.exe)
+level: high

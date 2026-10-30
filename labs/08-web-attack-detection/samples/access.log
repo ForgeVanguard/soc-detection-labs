@@ -1,0 +1,13 @@
+# SYNTHETIC SAMPLE DATA - documentation IP ranges, created for testing, not from a real system
+192.0.2.40 - - [05/Mar/2026:14:00:11 +0000] "GET /dvwa/index.php HTTP/1.1" 200 2117 "-" "Mozilla/5.0 (X11; Linux x86_64)"
+192.0.2.40 - - [05/Mar/2026:14:00:24 +0000] "GET /dvwa/vulnerabilities/sqli/?id=1&Submit=Submit HTTP/1.1" 200 4166 "-" "Mozilla/5.0 (X11; Linux x86_64)"
+192.0.2.40 - - [05/Mar/2026:14:00:26 +0000] "GET /dvwa/vulnerabilities/xss_r/?name=alice HTTP/1.1" 200 1796 "-" "Mozilla/5.0 (X11; Linux x86_64)"
+192.0.2.40 - - [05/Mar/2026:14:00:44 +0000] "GET /dvwa/about.php HTTP/1.1" 200 1885 "-" "Mozilla/5.0 (X11; Linux x86_64)"
+198.51.100.66 - - [05/Mar/2026:14:00:56 +0000] "GET /dvwa/vulnerabilities/sqli/?id=1%27%20or%20%271%27%3D%271&Submit=Submit HTTP/1.1" 200 3887 "-" "Mozilla/5.0 (X11; Linux x86_64)"
+198.51.100.66 - - [05/Mar/2026:14:00:58 +0000] "GET /dvwa/vulnerabilities/sqli/?id=1%27%20union%20select%20user%2Cpassword%20from%20users--%20&Submit=Submit HTTP/1.1" 200 3578 "-" "Mozilla/5.0 (X11; Linux x86_64)"
+198.51.100.66 - - [05/Mar/2026:14:01:05 +0000] "GET /dvwa/vulnerabilities/sqli/?id=1%27%20union%20select%20null%2C%40%40version--%20&Submit=Submit HTTP/1.1" 200 1653 "-" "Mozilla/5.0 (X11; Linux x86_64)"
+198.51.100.66 - - [05/Mar/2026:14:01:08 +0000] "GET /dvwa/vulnerabilities/xss_r/?name=%3Cscript%3Ealert%281%29%3C%2Fscript%3E HTTP/1.1" 200 3276 "-" "Mozilla/5.0 (X11; Linux x86_64)"
+198.51.100.66 - - [05/Mar/2026:14:01:22 +0000] "GET /dvwa/vulnerabilities/xss_r/?name=%3Cimg%20src%3Dx%20onerror%3Dalert%28document.cookie%29%3E HTTP/1.1" 200 1786 "-" "Mozilla/5.0 (X11; Linux x86_64)"
+198.51.100.66 - - [05/Mar/2026:14:01:30 +0000] "GET /dvwa/vulnerabilities/exec/?ip=127.0.0.1%3Bid&Submit=Submit HTTP/1.1" 200 1871 "-" "Mozilla/5.0 (X11; Linux x86_64)"
+198.51.100.66 - - [05/Mar/2026:14:01:48 +0000] "GET /dvwa/vulnerabilities/exec/?ip=127.0.0.1%7Ccat%20%2Fetc%2Fpasswd&Submit=Submit HTTP/1.1" 200 3238 "-" "Mozilla/5.0 (X11; Linux x86_64)"
+192.0.2.41 - - [05/Mar/2026:14:01:50 +0000] "GET /dvwa/vulnerabilities/sqli/?id=3&Submit=Submit HTTP/1.1" 200 4886 "-" "Mozilla/5.0 (X11; Linux x86_64)"

@@ -1,0 +1,1 @@
+(ParentImage:(*\/apache2 OR *\/httpd OR *\/nginx OR *\/php\-fpm OR *\/lighttpd)) AND (Image:(*\/sh OR *\/bash OR *\/dash OR *\/nc OR *\/python3 OR *\/perl))

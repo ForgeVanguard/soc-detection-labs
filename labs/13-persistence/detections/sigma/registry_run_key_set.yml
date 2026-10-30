@@ -1,0 +1,22 @@
+title: Registry Run Key Modified
+id: 904b8cdd-0b3d-5f5b-8c61-1092b0d074f8
+status: experimental
+description: 'Sysmon event 13: a value was set under a Run or RunOnce key.'
+author: Steven Drew
+date: 2026-03-01
+tags:
+    - attack.persistence
+    - attack.t1547.001
+logsource:
+    product: windows
+    category: registry_set
+detection:
+    selection:
+        TargetObject|contains:
+            - '\Software\Microsoft\Windows\CurrentVersion\Run\'
+            - '\Software\Microsoft\Windows\CurrentVersion\RunOnce\'
+            - '\Software\WOW6432Node\Microsoft\Windows\CurrentVersion\Run\'
+    condition: selection
+falsepositives:
+    - Legitimate software adding itself to startup (document known values)
+level: medium

@@ -1,0 +1,37 @@
+title: Linux Reverse Shell Command Line
+id: f0fffa75-d814-5359-bf99-8c7ad2332eb5
+status: experimental
+description: 'Command lines typical of interactive reverse shells (netcat exec flags, bash /dev/tcp redirection, mkfifo relay).'
+author: Steven Drew
+date: 2026-03-01
+tags:
+    - attack.execution
+    - attack.t1059.004
+    - attack.command-and-control
+    - attack.t1095
+logsource:
+    product: linux
+    category: process_creation
+detection:
+    selection_nc_img:
+        Image|endswith:
+            - '/nc'
+            - '/ncat'
+            - '/netcat'
+            - '/nc.traditional'
+    selection_nc_flags:
+        CommandLine|contains:
+            - ' -e '
+            - ' -c '
+            - ' --exec '
+            - ' --sh-exec '
+    selection_devtcp:
+        CommandLine|contains: '/dev/tcp/'
+    selection_fifo:
+        CommandLine|contains|all:
+            - 'mkfifo'
+            - ' nc '
+    condition: (selection_nc_img and selection_nc_flags) or selection_devtcp or selection_fifo
+falsepositives:
+    - Administrators testing connectivity with netcat (rare with -e)
+level: high

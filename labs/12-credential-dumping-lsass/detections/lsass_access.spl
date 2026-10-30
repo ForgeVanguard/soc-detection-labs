@@ -1,0 +1,5 @@
+``` Lab 12 - Sysmon 10: handle to lsass.exe with credential-read access masks, excluding common system callers. Needs a Sysmon config that logs ProcessAccess for lsass. ```
+index=wineventlog source="XmlWinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode=10 TargetImage="*\\lsass.exe" GrantedAccess IN ("0x1010","0x1410","0x1438","0x143a","0x1fffff")
+NOT SourceImage IN ("C:\\Windows\\System32\\*", "C:\\Program Files\\Windows Defender\\*", "C:\\ProgramData\\Microsoft\\Windows Defender\\*")
+| stats count min(_time) as first_seen values(GrantedAccess) as access values(CallTrace) as call_trace by host SourceImage SourceUser
+| convert ctime(first_seen)

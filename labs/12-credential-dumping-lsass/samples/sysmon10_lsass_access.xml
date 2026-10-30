@@ -1,0 +1,18 @@
+<!-- SYNTHETIC SAMPLE DATA - illustrative Sysmon Event ID 10 layout, not captured from a real system -->
+<Event xmlns="http://schemas.microsoft.com/win/2004/08/events/event">
+  <System>
+    <Provider Name="Microsoft-Windows-Sysmon" />
+    <EventID>10</EventID>
+    <Channel>Microsoft-Windows-Sysmon/Operational</Channel>
+    <Computer>&lt;HOSTNAME&gt;</Computer>
+  </System>
+  <EventData>
+    <Data Name="UtcTime">2026-03-07 03:15:42.101</Data>
+    <Data Name="SourceProcessId">4321</Data>
+    <Data Name="SourceImage">C:\LabTools\procdump64.exe</Data>
+    <Data Name="TargetProcessId">700</Data>
+    <Data Name="TargetImage">C:\Windows\system32\lsass.exe</Data>
+    <Data Name="GrantedAccess">0x1fffff</Data>
+    <Data Name="SourceUser">LAB\&lt;USERNAME&gt;</Data>
+  </EventData>
+</Event>

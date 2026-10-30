@@ -1,0 +1,10 @@
+// Lab 14 - Microsoft Sentinel: PsExec service installs and admin-share access with service pipes
+union
+  (Event
+    | where EventLog == "System" and EventID == 7045 and RenderedDescription has "PSEXESVC"
+    | project TimeGenerated, Computer, Signal = "psexec_service", Detail = RenderedDescription),
+  (SecurityEvent
+    | where EventID == 5145 and ShareName has_any ("ADMIN$", "IPC$")
+    | where RelativeTargetName has_any ("PSEXESVC", "-stdin", "-stdout", "-stderr", "svcctl")
+    | project TimeGenerated, Computer, Signal = "admin_share_pipe", Detail = strcat(IpAddress, " ", ShareName, " ", RelativeTargetName))
+| order by TimeGenerated desc

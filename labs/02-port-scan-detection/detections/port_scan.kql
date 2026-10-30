@@ -1,0 +1,6 @@
+// Lab 02 - Microsoft Sentinel, CommonSecurityLog (firewall CEF). Swap the table for your firewall source.
+CommonSecurityLog
+| where DeviceAction in~ ("deny", "drop", "reject", "blocked")
+| summarize DistinctPorts = dcount(DestinationPort), Attempts = count(), Ports = make_set(DestinationPort, 50)
+    by bin(TimeGenerated, 5m), SourceIP, DestinationIP
+| where DistinctPorts >= 20

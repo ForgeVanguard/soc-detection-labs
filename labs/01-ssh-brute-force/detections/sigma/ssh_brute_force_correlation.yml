@@ -1,0 +1,44 @@
+title: SSH Failed Authentication
+id: a8c2df58-aa13-5e47-b6cc-133942dac2c0
+status: experimental
+description: 'Single failed SSH authentication from sshd. Base event for the brute-force correlation rule; not meant to alert on its own.'
+author: Steven Drew
+date: 2026-03-01
+tags:
+    - attack.credential-access
+    - attack.t1110.001
+logsource:
+    product: linux
+    service: auth
+detection:
+    selection:
+        - 'Failed password for '
+        - 'Failed publickey for '
+        - 'Failed keyboard-interactive/pam for '
+    condition: selection
+falsepositives:
+    - Users mistyping passwords
+level: informational
+---
+title: SSH Brute Force - Many Failures From One Source
+id: ec96b3f0-3caa-5834-a1ff-1495a7d38ba4
+status: experimental
+description: Five or more failed SSH authentications from the same source IP within one minute.
+author: Steven Drew
+date: 2026-03-01
+tags:
+    - attack.credential-access
+    - attack.t1110.001
+correlation:
+    type: event_count
+    rules:
+        - a8c2df58-aa13-5e47-b6cc-133942dac2c0
+    group-by:
+        - src_ip
+    timespan: 1m
+    condition:
+        gte: 5
+falsepositives:
+    - Misconfigured service accounts or scripts retrying a stale password
+    - Vulnerability scanners with credentialed checks
+level: medium

@@ -1,0 +1,7 @@
+// Lab 01 - Elastic ES|QL, Filebeat/Elastic Agent "system" integration (auth dataset)
+FROM logs-system.auth-*
+| WHERE system.auth.ssh.event == "Failed"
+| EVAL bucket = DATE_TRUNC(1 minute, @timestamp)
+| STATS failures = COUNT(*), distinct_users = COUNT_DISTINCT(user.name) BY bucket, host.name, source.ip
+| WHERE failures >= 5
+| SORT failures DESC

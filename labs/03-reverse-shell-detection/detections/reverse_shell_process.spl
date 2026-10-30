@@ -1,0 +1,5 @@
+``` Lab 03 - reverse shell command lines from Linux process telemetry (auditd execve via Splunk Add-on for Unix and Linux, or Sysmon for Linux). ```
+index=linux (sourcetype=linux:audit type=EXECVE) OR (sourcetype="sysmon:linux" EventID=1)
+| eval cmd=coalesce(CommandLine, cmdline, process)
+| where match(cmd, "(?i)\b(nc|ncat|netcat)\b.*\s-(e|c)\s") OR match(cmd, "/dev/tcp/") OR (match(cmd, "mkfifo") AND match(cmd, "\bnc\b"))
+| table _time host user cmd

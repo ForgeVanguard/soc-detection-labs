@@ -1,0 +1,1 @@
+winlog.channel:Security AND (event.code:4776 AND (winlog.event_data.Status:(0xc000006a OR 0xc0000064)))

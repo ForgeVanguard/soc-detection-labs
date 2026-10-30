@@ -1,0 +1,10 @@
+// Lab 08 - Elastic ES|QL over the Apache/nginx integration (url.original is the raw request target)
+FROM logs-apache.access-*, logs-nginx.access-*
+| EVAL q = TO_LOWER(url.original)
+| EVAL attack = CASE(
+    q RLIKE ".*(union(\\+|%20| )select|information_schema|sleep\\(|%27--|'--).*", "sqli",
+    q RLIKE ".*(<script|%3cscript|onerror(=|%3d)|javascript:|alert(\\(|%28)).*", "xss",
+    q RLIKE ".*(;|%3b|\\||%7c)(id|whoami|cat(\\+|%20)/etc/passwd).*", "cmd_injection",
+    null)
+| WHERE attack IS NOT NULL
+| STATS requests = COUNT(*) BY source.ip, attack

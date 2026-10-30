@@ -1,0 +1,9 @@
+// Lab 09 - Microsoft Sentinel: host/port pairs seen today that never appeared in the previous 14 days
+let baseline = CommonSecurityLog
+    | where TimeGenerated between (ago(15d) .. ago(1d))
+    | distinct SourceIP, DestinationPort;
+CommonSecurityLog
+| where TimeGenerated > ago(1d)
+| summarize Conns = count(), Peers = dcount(DestinationIP) by SourceIP, DestinationPort
+| join kind=leftanti baseline on SourceIP, DestinationPort
+| order by Conns desc

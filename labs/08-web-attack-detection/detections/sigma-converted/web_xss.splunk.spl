@@ -1,0 +1,1 @@
+"cs-uri-query" IN ("*<script*", "*%3Cscript*", "*javascript:*", "*onerror=*", "*onerror%3D*", "*onload=*", "*onload%3D*", "*alert(*", "*alert%28*", "*document.cookie*")

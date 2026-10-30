@@ -1,0 +1,33 @@
+title: LSASS Memory Dump via Command Line
+id: 2f734813-480b-53a6-8d85-d4509e84e3c0
+status: experimental
+description: 'Sysmon event 1 / 4688: comsvcs.dll MiniDump, ProcDump against lsass, or Task Manager-style dump tooling.'
+author: Steven Drew
+date: 2026-03-01
+tags:
+    - attack.credential-access
+    - attack.t1003.001
+logsource:
+    product: windows
+    category: process_creation
+detection:
+    selection_comsvcs:
+        CommandLine|contains|all:
+            - 'comsvcs'
+            - 'MiniDump'
+    selection_procdump_img:
+        - Image|endswith:
+            - '\procdump.exe'
+            - '\procdump64.exe'
+        - OriginalFileName: 'procdump'
+    selection_procdump_args:
+        CommandLine|contains:
+            - ' -ma '
+            - ' /ma '
+            - ' -mm '
+    selection_lsass_target:
+        CommandLine|contains: 'lsass'
+    condition: selection_comsvcs or (selection_procdump_img and selection_procdump_args and selection_lsass_target)
+falsepositives:
+    - Support engineers capturing dumps for troubleshooting (should be rare and ticketed)
+level: high

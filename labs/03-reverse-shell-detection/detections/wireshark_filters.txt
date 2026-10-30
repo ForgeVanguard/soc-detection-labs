@@ -1,0 +1,8 @@
+# Lab 03 - Wireshark display filters for reviewing a reverse shell capture
+# Listener port used in the lab (change to yours):
+tcp.port == 4444
+# Long-lived TCP sessions that start from the target (client = victim):
+tcp.flags.syn == 1 && tcp.flags.ack == 0 && ip.src == 192.0.2.20
+# Plain-text shell output on the wire:
+tcp.port == 4444 && frame contains "uid="
+# Follow the stream: right-click a packet > Follow > TCP Stream

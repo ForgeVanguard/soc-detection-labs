@@ -1,0 +1,9 @@
+// Lab 01 - Microsoft Sentinel (Syslog table, facility auth/authpriv)
+Syslog
+| where ProcessName == "sshd" and SyslogMessage startswith "Failed "
+| extend User = extract(@"for (?:invalid user )?(\S+) from", 1, SyslogMessage),
+         SrcIp = extract(@"from (\S+) port", 1, SyslogMessage)
+| summarize Failures = count(), DistinctUsers = dcount(User), Users = make_set(User, 20)
+    by bin(TimeGenerated, 1m), HostName, SrcIp
+| where Failures >= 5
+| order by Failures desc

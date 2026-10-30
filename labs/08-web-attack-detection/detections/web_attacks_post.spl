@@ -1,0 +1,5 @@
+``` Lab 08 - DVWA command injection is sent by POST (ip=...), so the payload is not in access logs. Use ModSecurity audit logs or a reverse proxy that logs request bodies. ```
+index=web sourcetype=modsec:audit
+| eval body=lower(urldecode(request_body))
+| where match(body, "ip=[^&]*(;|\||&&|`|\$\()")
+| table _time src_ip uri body

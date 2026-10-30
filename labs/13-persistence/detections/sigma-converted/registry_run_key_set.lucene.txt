@@ -1,0 +1,1 @@
+winlog.channel:Microsoft\-Windows\-Sysmon\/Operational AND (event.code:13 AND (registry.path:(*\\Software\\Microsoft\\Windows\\CurrentVersion\\Run\\* OR *\\Software\\Microsoft\\Windows\\CurrentVersion\\RunOnce\\* OR *\\Software\\WOW6432Node\\Microsoft\\Windows\\CurrentVersion\\Run\\*)))

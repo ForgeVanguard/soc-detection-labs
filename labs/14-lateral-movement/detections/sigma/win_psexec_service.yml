@@ -1,0 +1,25 @@
+title: PsExec Service Installed
+id: 5a96438a-6e07-545f-83d1-2dc1a1b7ea62
+status: experimental
+description: 'System event 7045 for the PsExec service (PSEXESVC) or a service binary dropped into ADMIN$.'
+author: Steven Drew
+date: 2026-03-01
+tags:
+    - attack.execution
+    - attack.t1569.002
+    - attack.lateral-movement
+    - attack.t1021.002
+logsource:
+    product: windows
+    service: system
+detection:
+    selection_eid:
+        Provider_Name: 'Service Control Manager'
+        EventID: 7045
+    selection_name:
+        - ServiceName: 'PSEXESVC'
+        - ImagePath|endswith: '\PSEXESVC.exe'
+    condition: selection_eid and selection_name
+falsepositives:
+    - Administrators who use PsExec legitimately (allowlist their source hosts)
+level: medium

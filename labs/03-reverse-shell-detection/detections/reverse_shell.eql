@@ -1,0 +1,7 @@
+// Lab 03 - Elastic EQL (Elastic Defend or Auditbeat process events)
+process where host.os.type == "linux" and event.type == "start" and
+  (
+    (process.name in ("nc", "ncat", "netcat", "nc.traditional") and process.args in ("-e", "-c", "--exec", "--sh-exec")) or
+    process.command_line : "*/dev/tcp/*" or
+    (process.command_line : "*mkfifo*" and process.command_line : "* nc *")
+  )

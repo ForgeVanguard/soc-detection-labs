@@ -1,0 +1,10 @@
+// Lab 08 - Microsoft Sentinel. Uses W3CIISLog; for Apache/nginx use your custom access-log table with the same logic.
+W3CIISLog
+| extend q = tolower(url_decode(strcat(csUriStem, "?", csUriQuery)))
+| extend Attack = case(
+    q matches regex @"union\s+(all\s+)?select|'\s*or\s*'?1'?\s*=\s*'?1|information_schema|sleep\(|@@version", "sqli",
+    q matches regex @"<script|javascript:|onerror\s*=|onload\s*=|alert\(|document\.cookie", "xss",
+    q matches regex @"(;|\||&&|`|\$\()\s*(id|whoami|uname|cat\s+/etc/passwd)", "cmd_injection",
+    "")
+| where Attack != ""
+| summarize Requests = count(), FirstSeen = min(TimeGenerated), LastSeen = max(TimeGenerated), Statuses = make_set(scStatus) by cIP, Attack

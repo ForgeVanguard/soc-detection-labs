@@ -1,0 +1,6 @@
+"Failed password for " OR "Failed publickey for " OR "Failed keyboard-interactive/pam for "
+
+| bin _time span=1m
+| stats count as event_count by _time src_ip
+
+| search event_count >= 5

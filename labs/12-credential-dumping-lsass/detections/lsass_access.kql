@@ -1,0 +1,6 @@
+// Lab 12 - Microsoft Sentinel with Sysmon in the Event table (uses the community "Sysmon" parser function)
+Sysmon
+| where EventID == 10 and TargetImage endswith @"\lsass.exe"
+| where GrantedAccess in~ ("0x1010", "0x1410", "0x1438", "0x143a", "0x1fffff")
+| where not(SourceImage startswith @"C:\Windows\System32\" or SourceImage endswith @"\WerFault.exe")
+| project TimeGenerated, Computer, SourceImage, SourceUser, GrantedAccess, CallTrace

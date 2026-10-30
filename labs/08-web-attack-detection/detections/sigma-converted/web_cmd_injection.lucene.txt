@@ -1,0 +1,1 @@
+cs-uri-query:(*;id* OR *%3Bid* OR *\|id* OR *%7Cid* OR *\&\&whoami* OR *%26%26whoami* OR *;whoami* OR *%3Bwhoami* OR *cat\ \/etc\/passwd* OR *cat%20\/etc\/passwd* OR *cat\+\/etc\/passwd* OR *$\(* OR *%24%28* OR *`*)

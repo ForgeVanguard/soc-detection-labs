@@ -1,0 +1,47 @@
+title: Firewall Connection Attempt
+id: ff9b0c42-bbcd-521f-b9f5-b746a5363a70
+status: experimental
+description: 'Inbound connection attempt seen by a host or perimeter firewall. Base event for the port-scan correlation.'
+author: Steven Drew
+date: 2026-03-01
+tags:
+    - attack.discovery
+    - attack.t1046
+logsource:
+    category: firewall
+detection:
+    selection:
+        action:
+            - 'blocked'
+            - 'denied'
+            - 'drop'
+            - 'reject'
+    condition: selection
+falsepositives:
+    - All normal traffic
+level: informational
+---
+title: Port Scan - Many Distinct Destination Ports From One Source
+id: f4564cd1-d555-5c8e-a3d2-3b93e4b1e846
+status: experimental
+description: One source IP hits 20 or more distinct destination ports that the firewall rejects within five minutes.
+author: Steven Drew
+date: 2026-03-01
+tags:
+    - attack.discovery
+    - attack.t1046
+correlation:
+    type: value_count
+    rules:
+        - ff9b0c42-bbcd-521f-b9f5-b746a5363a70
+    group-by:
+        - src_ip
+        - dst_ip
+    timespan: 5m
+    condition:
+        field: dst_port
+        gte: 20
+falsepositives:
+    - Authorized vulnerability scanners and asset discovery tools
+    - Monitoring systems probing many service ports
+level: medium

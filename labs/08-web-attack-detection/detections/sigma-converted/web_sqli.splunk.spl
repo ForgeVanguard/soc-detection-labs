@@ -1,0 +1,1 @@
+"cs-uri-query" IN ("*' or '1'='1*", "*%27%20or%20%271%27%3D%271*", "*union select*", "*union%20select*", "*union+select*", "*information_schema*", "*sleep(*", "*@@version*", "*%27--*", "*'--*")

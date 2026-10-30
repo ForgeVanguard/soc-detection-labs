@@ -1,0 +1,5 @@
+// Lab 04 - a web server process starting a shell (Defender for Endpoint / Sentinel, Linux)
+DeviceProcessEvents
+| where InitiatingProcessFileName in~ ("apache2", "httpd", "nginx", "php-fpm", "lighttpd")
+| where FileName in~ ("sh", "bash", "dash", "nc", "python3", "perl")
+| project Timestamp, DeviceName, InitiatingProcessFileName, FileName, ProcessCommandLine, AccountName

@@ -1,0 +1,5 @@
+``` Lab 09 - build a per-host baseline from a known-clean week: which destination ports each internal host talks to, and how much. Saves to a lookup. ```
+index=zeek sourcetype=zeek:conn earliest=-14d@d latest=-7d@d
+| stats count as conns sum(orig_bytes) as bytes_out dc(id.resp_h) as peers by id.orig_h id.resp_p proto
+| eval avg_daily_conns=round(conns/7, 1), avg_daily_bytes_out=round(bytes_out/7, 0)
+| outputlookup network_baseline.csv

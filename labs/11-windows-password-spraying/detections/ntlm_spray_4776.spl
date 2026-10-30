@@ -1,0 +1,5 @@
+``` Lab 11 - NTLM validation failures on the DC (4776). Workstation name is the source; spraying over SMB/NTLM shows up here. ```
+index=wineventlog source="XmlWinEventLog:Security" EventCode=4776 Error_Code IN ("0xC000006A","0xC0000064")
+| bin _time span=10m
+| stats count as failures dc(Logon_Account) as distinct_accounts values(Logon_Account) as accounts by _time Source_Workstation
+| where distinct_accounts >= 10

@@ -1,0 +1,16 @@
+// Lab 13 - Microsoft Sentinel: all three persistence types in one hunt
+let tasks = SecurityEvent
+    | where EventID == 4698
+    | extend TaskName = tostring(parse_xml(EventData).EventData.Data[3]["#text"])
+    | where TaskName !startswith @"\Microsoft\"
+    | project TimeGenerated, Computer, Mechanism = "scheduled_task", Detail = TaskName, Account = SubjectUserName;
+let services = Event
+    | where EventLog == "System" and EventID == 7045
+    | extend ImagePath = extract(@"<Data Name=""ImagePath"">([^<]+)<", 1, EventData)
+    | where ImagePath matches regex @"(?i)\\(appdata|temp|users\\public|programdata)\\|powershell|mshta|rundll32"
+    | project TimeGenerated, Computer, Mechanism = "service", Detail = ImagePath, Account = "";
+let runkeys = Sysmon
+    | where EventID == 13 and TargetObject has @"\CurrentVersion\Run"
+    | project TimeGenerated, Computer, Mechanism = "run_key", Detail = strcat(TargetObject, " = ", Details), Account = User;
+union tasks, services, runkeys
+| order by TimeGenerated desc

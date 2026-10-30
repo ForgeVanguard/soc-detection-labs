@@ -1,0 +1,1 @@
+Channel="Security" EventID=5145 ShareName IN ("*\\ADMIN$", "*\\IPC$") RelativeTargetName IN ("*PSEXESVC*", "*-stdin*", "*-stdout*", "*-stderr*", "*svcctl*")

@@ -1,0 +1,28 @@
+title: Cross-Site Scripting Patterns in Web Request
+id: be024fc6-850a-536e-899e-6ff4a7de2221
+status: experimental
+description: 'Reflected or stored XSS probe strings in the query string (raw and URL-encoded).'
+author: Steven Drew
+date: 2026-03-01
+tags:
+    - attack.initial-access
+    - attack.t1189
+logsource:
+    category: webserver
+detection:
+    selection:
+        cs-uri-query|contains:
+            - '<script'
+            - '%3Cscript'
+            - 'javascript:'
+            - 'onerror='
+            - 'onerror%3D'
+            - 'onload='
+            - 'onload%3D'
+            - 'alert('
+            - 'alert%28'
+            - 'document.cookie'
+    condition: selection
+falsepositives:
+    - Applications that legitimately pass HTML in parameters
+level: low

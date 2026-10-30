@@ -1,0 +1,5 @@
+``` Lab 03 - network view: a shell or netcat process holding an outbound TCP connection (Sysmon for Linux event 3). ```
+index=linux sourcetype="sysmon:linux" EventID=3 Initiated=true
+| where match(Image, "/(bash|sh|dash|zsh|nc|ncat|netcat)$")
+| stats count min(_time) as first max(_time) as last by host Image DestinationIp DestinationPort
+| convert ctime(first) ctime(last)

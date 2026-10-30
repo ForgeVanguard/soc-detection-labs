@@ -1,0 +1,31 @@
+title: New Service Installed With Suspicious Image Path
+id: 716b401d-d6b8-5b12-abf0-ce5ee160da13
+status: experimental
+description: 'System event 7045: a service was installed whose binary lives in a user-writable path or runs a script interpreter.'
+author: Steven Drew
+date: 2026-03-01
+tags:
+    - attack.persistence
+    - attack.t1543.003
+logsource:
+    product: windows
+    service: system
+detection:
+    selection:
+        Provider_Name: 'Service Control Manager'
+        EventID: 7045
+    selection_path:
+        ImagePath|contains:
+            - '\AppData\'
+            - '\Temp\'
+            - '\Users\Public\'
+            - '\ProgramData\'
+            - 'powershell'
+            - 'cmd.exe /c'
+            - 'cmd /c'
+            - 'mshta'
+            - 'rundll32'
+    condition: selection and selection_path
+falsepositives:
+    - Some third-party software installs services from ProgramData
+level: high

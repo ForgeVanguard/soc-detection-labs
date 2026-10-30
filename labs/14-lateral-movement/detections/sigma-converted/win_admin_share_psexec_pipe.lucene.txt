@@ -1,0 +1,1 @@
+winlog.channel:Security AND (event.code:5145 AND (winlog.event_data.ShareName:(*\\ADMIN$ OR *\\IPC$)) AND (winlog.event_data.RelativeTargetName:(*PSEXESVC* OR *\-stdin* OR *\-stdout* OR *\-stderr* OR *svcctl*)))

@@ -1,0 +1,6 @@
+// Lab 12 - Elastic EQL
+process where host.os.type == "windows" and event.type == "start" and
+  (
+    (process.command_line : "*comsvcs*" and process.command_line : "*MiniDump*") or
+    (process.pe.original_file_name : "procdump" and process.args : ("-ma", "/ma", "-mm") and process.command_line : "*lsass*")
+  )
