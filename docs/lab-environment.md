@@ -79,8 +79,8 @@ Set these via GPO (Advanced Audit Policy Configuration), then run `gpupdate /for
 You do not need the full lab to check that the detection content is correct:
 
 ```bash
-pip install sigma-cli
-sigma plugin install splunk elasticsearch sysmon windows
+pip install sigma-cli==3.1.0 pySigma==1.5.1 pysigma-backend-splunk==2.1.0 \
+  pySigma-backend-elasticsearch==2.1.1 pysigma-pipeline-sysmon==2.0.0 pysigma-pipeline-windows==2.0.1
 ./scripts/convert-sigma.sh          # validates and converts every Sigma rule
 
 pip install pytest

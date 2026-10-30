@@ -10,8 +10,10 @@ jobs:
           python-version: "3.12"
       - name: Install tools
         run: |
-          pip install pytest sigma-cli
-          sigma plugin install splunk elasticsearch sysmon windows
+          # Pinned to the versions the rules were validated with
+          pip install pytest sigma-cli==3.1.0 pySigma==1.5.1 \
+            pysigma-backend-splunk==2.1.0 pySigma-backend-elasticsearch==2.1.1 \
+            pysigma-pipeline-sysmon==2.0.0 pysigma-pipeline-windows==2.0.1
       - name: Sigma check and convert
         run: ./scripts/convert-sigma.sh
       - name: Tests

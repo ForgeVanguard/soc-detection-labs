@@ -2,8 +2,8 @@
 # convert-sigma.sh - validate every Sigma rule and convert it to Splunk SPL and Elastic Lucene.
 #
 # Requires sigma-cli with the splunk, elasticsearch, sysmon and windows plugins:
-#   pip install sigma-cli
-#   sigma plugin install splunk elasticsearch sysmon windows
+#   pip install sigma-cli==3.1.0 pySigma==1.5.1 pysigma-backend-splunk==2.1.0 \
+#     pySigma-backend-elasticsearch==2.1.1 pysigma-pipeline-sysmon==2.0.0 pysigma-pipeline-windows==2.0.1
 #
 # Output goes to labs/<lab>/detections/sigma-converted/<rule>.{splunk.spl,lucene.txt}
 # Windows rules use the sysmon + Windows log-source pipelines (Splunk) and ECS/Winlogbeat (Elastic).
